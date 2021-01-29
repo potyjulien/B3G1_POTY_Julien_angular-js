@@ -23,7 +23,7 @@ export class AppComponent {
 
   signout() {
     // supprimer les données de sessions et retourner à la page de login
-    this.router.navigate(['/auth/signin']).then(() => {
+    this.router.navigate(['/auth']).then(() => {
       this.sessionService.clear();
       AuthService.user = null;
       this.snackBar.open('Déconnexion réussie', 'Fermer', {
