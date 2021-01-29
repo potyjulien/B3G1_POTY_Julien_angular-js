@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 import { User } from '../entities/user';
-import { environment} from '../../../environments/environment';
-import {tap} from 'rxjs/operators';
-import {SessionService} from './session.service';
+import { environment } from '../../../environments/environment';
+import { tap } from 'rxjs/operators';
+import { SessionService } from './session.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +21,10 @@ export class AuthService {
 
   static get isSignedIn(): boolean {
     return AuthService.user !== null;
+  }
+
+  static get isAdmin(): boolean {
+    return AuthService.isSignedIn ? AuthService.user.roles.includes('ROLE_ADMIN') : false ;
   }
 
   signin(email: string, password: string): Observable<any> {
@@ -52,7 +56,5 @@ export class AuthService {
       }),
     );
   }
-
-
 
 }

@@ -47,8 +47,8 @@ export class CanActivateGuard implements CanActivate {
           }
         // on vérifie que l'utilisateur est admin dans le cas où la router est dédiés à des admins
         } else if ( 'roles' in response ) {
-          if (!response.roles.includes('ROLE_ADMIN') && ('admin' in next.data) ) {
-            this.router.navigate(['auth/signin']);
+          if (!AuthService.isAdmin && ('admin' in next.data) ) {
+            this.router.navigate(['dash/home']);
             this.snackBar.open('Permission insuffisante : accès refusé', 'Fermer', {
               duration: 8000,
               horizontalPosition: 'end',
