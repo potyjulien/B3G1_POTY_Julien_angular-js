@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router} from '@angular/router';
-import {Observable, of} from 'rxjs';
-import {AuthService} from './services/auth.service';
-import {catchError, map} from 'rxjs/operators';
-import {User} from './entities/user';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
+import { Observable, of } from 'rxjs';
+import { AuthService } from './services/auth.service';
+import { catchError, map } from 'rxjs/operators';
+import { User } from './entities/user';
+import { MatSnackBar } from '@angular/material';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,8 @@ export class CanActivateGuard implements CanActivate {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {
   }
 
@@ -36,12 +38,22 @@ export class CanActivateGuard implements CanActivate {
         if ('status' in response) {
           if (401 === response.status || 403 === response.status) {
             this.router.navigate(['auth/signin']);
+            this.snackBar.open('Accès refusé', 'Fermer', {
+              duration: 8000,
+              horizontalPosition: 'end',
+              verticalPosition: 'top',
+            });
             return false;
           }
         // on vérifie que l'utilisateur est admin dans le cas où la router est dédiés à des admins
         } else if ( 'roles' in response ) {
           if (!response.roles.includes('ROLE_ADMIN') && ('admin' in next.data) ) {
             this.router.navigate(['auth/signin']);
+            this.snackBar.open('Permission insuffisante : accès refusé', 'Fermer', {
+              duration: 8000,
+              horizontalPosition: 'end',
+              verticalPosition: 'top',
+            });
             return false;
           }
           return true;
